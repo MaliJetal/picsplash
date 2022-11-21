@@ -1,1 +1,1 @@
-# PicSplash - Unsplash Like Clone Application
+# PicSplash - "Unsplash" like Clone Application

@@ -1,11 +1,12 @@
 import React from 'react';
 import './App.css';
+import {mainUrl, searchUrl} from './AppConstants';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-          Learn React
+          UnSplash Application
       </header>
     </div>
   );
