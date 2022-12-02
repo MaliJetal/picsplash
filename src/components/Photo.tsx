@@ -1,15 +1,11 @@
 import React from 'react';
+import '../App.css';
+import '../index.css';
 
 export interface PhotoProps{
   key : Number,
   image : any,
   
-}
-
-declare namespace JSX {
-  interface IntrinsicElements {
-    div:  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-  }
 }
 
 interface photoType{
@@ -36,17 +32,17 @@ const Photo = ({
 }: photoType) => {
   return(
     <>
-      <h2>Photo Component</h2>
       <article className="photo">
         <img src={regular} alt={alt_description} />
-        <div className='phtot-info'>
+        <div className='photo-info'>
           <h3>{name}</h3>
           <p>{likes} likes</p>
         </div>
-      </article>
+      
       <a href={portfolio_url}>
         <img src={medium} alt={name} className="user-img" />
       </a>
+      </article>
     </>
   )
 }
