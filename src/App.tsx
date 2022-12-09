@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {FaSearch} from 'react-icons/fa';
 import axios from 'axios';
 import './App.css';
@@ -9,8 +9,9 @@ import Photo from './components/Photo';
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [photos, setPhotos] =   useState<any>([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [query, setQuery] = useState<string>("");
+  const mounted = useRef(false);
   
   const mainurl = `${api_endpoints.mainUrl}${api_endpoints.client_id}`;
   const searchurl = `${api_endpoints.searchUrl}${api_endpoints.client_id}`;
@@ -28,9 +29,12 @@ const App = () => {
     await axios.get(url)
       .then((response) =>{
         setPhotos((oldPhotos : any) => {
+          console.log("inside photos");
           if (query && page === 1) {
+            console.log("triggered");
             return response.data.results;
           } else if (query) {
+            console.log("triggered2");
             return [...oldPhotos, ...response.data.results];
           } else {
             return [...oldPhotos, ...response.data];
@@ -44,30 +48,41 @@ const App = () => {
   }
   useEffect(()=> {
     setLoading(true);
-    fetchImages() ;
+    fetchImages();
     setLoading(false);
+    // eslint-disable-next-line
   }, [page]);
+
+  useEffect(()=> {
+    if(!mounted.current){
+      mounted.current = true;
+      return;
+    }
+    if(query){
+      setPage(1)
+    }
+
+  }, [])
 
   useEffect(()=> {
     const event : any = window.addEventListener("scroll", () : any => {
       if(!loading && (window.innerHeight+ window.scrollY) >= document.body.scrollHeight)
       {
         setPage(prevPage => prevPage+1);
-      }  
-        
+      }     
     }) 
 
     return () => window.removeEventListener('scroll', event);
+    // eslint-disable-next-line
   }, [])
 
   const handleSubmit = (e: React.SyntheticEvent<EventTarget>) : void => {
     e.preventDefault();
-    setPage(1);
-    // if (!query) return;
+    if(!query) return;
     if (page === 1) {
       fetchImages();
     }
-    // console.log("object")
+    setPage(1);
   }
   return (
     <div className="App">
@@ -82,8 +97,8 @@ const App = () => {
       </section>
       <section className='photos'>
         <div className='photos-center'>
-          {photos.map((image : any) => {
-            return <Photo key= {image.id}  {...image} />
+          {photos.map((image : any, index: Number) => {
+            return <Photo key= {index}  {...image} />
           })}
         </div>
         {loading && <h2 className='loading'>Loading ...</h2>}
